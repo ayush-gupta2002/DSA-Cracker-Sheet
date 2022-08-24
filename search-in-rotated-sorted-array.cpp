@@ -1,6 +1,8 @@
 class Solution {
 public:
     
+    //For search in rotated sorted array with duplicate elements check the solution
+    
     int binarySearch(vector<int>& nums,int key,int lo,int hi){
         int mid = lo + (hi-lo)/2;
         

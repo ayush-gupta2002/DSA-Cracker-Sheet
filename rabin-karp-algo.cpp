@@ -1,5 +1,6 @@
 //{ Driver Code Starts
-#include<bits/stdc++.h>
+#include <iostream>
+#include <vector>
 using namespace std;
 
 
@@ -7,6 +8,11 @@ using namespace std;
 class Solution
 {
     public:
+    
+        int hashingFunction(int m,char i){
+            return (i-96)*((26)^(m));
+        }
+        
         vector <int> search(string pat, string txt)
         {
             vector<int> res;
@@ -14,40 +20,34 @@ class Solution
             int j=0;
             int n=txt.size();
             int window_size = pat.size();
+            int m = window_size;
             int targetHash = 0;
             for(char i:pat){
-                targetHash += i;
+                targetHash += hashingFunction(m-1,i);
+                m--;
             }
-            int currentHash = 0;
+            cout<<"Target hash: "<<targetHash<<endl;
+            cout<<endl;
+            long long int currentHash = 0;
             
-            while(j<n){
-                currentHash += txt[j];
-                
-                if(j-i+1 < window_size){
-                    j++;
+            for(int j=0;j<window_size;j++){
+                currentHash += hashingFunction(window_size-j-1,txt[j]);
+                if(currentHash == targetHash){
+                    res.push_back(i+1);
                 }
-                else if(j-i+1 == window_size){
-                    if(currentHash==targetHash){
-                        int k=0;
-                        int m=i;
-                        while(k<pat.size() && m<=j){
-                            if(pat[k] != txt[m]){
-                                break;
-                            }
-                            k++;
-                            m++;
-                        }
-                        if(k==pat.size()){
-                            res.push_back(i+1);
-                        }
-                    }
-                    currentHash -= txt[i];
-                    i++;
-                    j++;
-                }
+                cout<<"currentHash "<<currentHash<<endl;
             }
-            if(!res.size()){
-                res.push_back(-1);
+            while(j<n){
+                currentHash -= hashingFunction(window_size-1,txt[i]);
+                currentHash *= 10;
+                i++;
+                j++;
+                currentHash += hashingFunction(0,txt[j]);
+                cout<<"currentHash "<<currentHash<<endl;
+                
+                if(currentHash == targetHash){
+                    res.push_back(i+1);
+                }
             }
             return res;
         }

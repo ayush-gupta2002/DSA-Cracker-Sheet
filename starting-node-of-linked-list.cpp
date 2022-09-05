@@ -8,23 +8,42 @@
  */
 class Solution {
 public:
-    bool hasCycle(ListNode *head) {
-        if(head == NULL || head -> next == NULL){
-            return false;
+    
+    ListNode* floydDetection(ListNode *head){
+        if(head == NULL){
+            return NULL;
         }
-        ListNode* slower = head;
-        ListNode* faster = head -> next;
+        ListNode* slow = head;
+        ListNode* fast = head;
         
-        while(faster != NULL){
-            if(faster == slower){
-                return true;
+        while(fast != NULL && slow != NULL){
+            fast = fast -> next;
+            if(fast){
+                fast = fast -> next;
             }
-            faster = faster -> next;
-            if(faster){
-                faster = faster -> next;
+            slow = slow -> next;
+            if(fast == slow){
+                return fast;
             }
-            slower = slower -> next;
         }
-        return false;
+        return NULL;
+    }
+    
+    ListNode *detectCycle(ListNode *head) {
+        if(head == NULL){
+            return NULL;
+        }
+        ListNode* intersection = floydDetection(head);
+        if(intersection){
+            ListNode* slow = head;
+            while (slow != intersection){
+                slow = slow -> next;
+                intersection = intersection -> next;
+            }
+            return intersection;
+        }
+        else{
+            return NULL;
+        }
     }
 };

@@ -1,3 +1,5 @@
+//MEMOIZATION
+
 class Solution {
 public:
 
@@ -39,3 +41,38 @@ public:
         return res;
     }
 };
+
+//TABULATION
+
+	int minCoins(int coins[], int M, int V) 
+	{ 
+	    vector<vector<int>> dp(M, vector<int> (V+1,0));
+	    
+	    for(int curri=0;curri<M;curri++){
+	        for(int target=0;target<=V;target++){
+	            if(target == 0){
+	                dp[curri][0] = 0;
+	            }
+	            else if(curri == 0){
+	                if(target%coins[0] == 0){
+	                    dp[0][target] = target/coins[0];
+	                }
+	                else{
+	                    dp[0][target] = 1e9;
+	                }
+	            }
+	            else{
+	                int left = INT_MAX;
+	                if(target >= coins[curri]){
+	                    left = 1 + dp[curri][target-coins[curri]];
+	                }
+	                int right = dp[curri-1][target];
+	                dp[curri][target] = min(left,right);
+	            }
+	        }
+	    }
+	    if(dp[M-1][V] >= 1e9){
+	        return -1;
+	    }
+	    return dp[M-1][V];
+	} 
